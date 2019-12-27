@@ -27,7 +27,8 @@ public class AddStudentFragment extends Fragment {
     String fullname, address, age, gender;
     EditText etName, etAddress, etAge;
     RadioGroup radioGender;
-    Button btnSave;
+    Button btnSave, btnUpdate;
+    int selectedStudentPosition;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -35,20 +36,46 @@ public class AddStudentFragment extends Fragment {
         addStudentModel = ViewModelProviders.of(this).get(AddStudentModel.class);
         View root = inflater.inflate(R.layout.fragment_add_student, container, false);
 
+        int selectedStudentPosition = getStudentDetailsIfUpdateRequest();
+        if (selectedStudentPosition != 0){
+            setValuesInFields(selectedStudentPosition);
+            this.selectedStudentPosition = selectedStudentPosition;
+        }
+
         radioGender = root.findViewById(R.id.radioGender);
         etName = root.findViewById(R.id.etName);
         etAge = root.findViewById(R.id.etAge);
         etAddress = root.findViewById(R.id.etAddress);
         btnSave = root.findViewById(R.id.btnSave);
+        btnUpdate = root.findViewById(R.id.btnUpdate);
 
         radioGender.setOnCheckedChangeListener(this::selectGender);
         btnSave.setOnClickListener(this::save);
+        btnUpdate.setOnClickListener(this::update);
 
         TextView textView = root.findViewById(R.id.text_dashboard);
         addStudentModel.getText().observe(this, textView::setText);
 
         return root;
 
+    }
+
+    private void setValuesInFields(int selectedStudentPosition) {
+        Student student = MainActivity.students.get(selectedStudentPosition);
+        etName.setText(student.getName());
+        etAddress.setText(student.getAddress());
+        etAge.setText(student.getAge());
+    }
+
+    private void update(View view) {
+        if (isInputDetailsValid()) {
+            MainActivity.students.set(selectedStudentPosition, new Student(fullname, address, gender, Integer.parseInt(age)));
+        }
+    }
+
+    private int getStudentDetailsIfUpdateRequest() {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        return mainActivity.getSelectedStudentPositionForEdit();
     }
 
     private void selectGender(RadioGroup radioGroup, int selectedId) {

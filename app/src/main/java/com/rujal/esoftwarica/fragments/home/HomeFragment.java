@@ -17,17 +17,23 @@ import android.widget.TextView;
 import com.rujal.esoftwarica.MainActivity;
 import com.rujal.esoftwarica.R;
 import com.rujal.esoftwarica.Student;
+import com.rujal.esoftwarica.StudentEditListener;
 import com.rujal.esoftwarica.StudentsActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements StudentsActivity.StudentAdapterEvents {
 
     private HomeModel homeModel;
     private RecyclerView recyclerView;
 
+
+    @Override
+    public void onEditClicked(int position) {
+        StudentEditListener studentEditListener = (MainActivity) getActivity();
+        studentEditListener.editStudent(position);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -44,7 +50,7 @@ public class HomeFragment extends Fragment {
             students.add(new Student("Rujal", "Kathmandu", "Male", 25));
         }
 
-        StudentsActivity studentsActivity = new StudentsActivity(getContext(), students);
+        StudentsActivity studentsActivity = new StudentsActivity(this, getContext(), students);
         recyclerView.setAdapter(studentsActivity);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 

@@ -18,8 +18,10 @@ public class StudentsActivity extends RecyclerView.Adapter<StudentsActivity.Stud
 
     Context mContext;
     List<Student> studentList;
+    private StudentAdapterEvents studentAdapterEvents;
 
-    public StudentsActivity(Context mContext, List<Student> studentList) {
+    public StudentsActivity(StudentAdapterEvents studentAdapterEvents, Context mContext, List<Student> studentList) {
+        this.studentAdapterEvents = studentAdapterEvents;
         this.mContext = mContext;
         this.studentList = studentList;
     }
@@ -42,6 +44,7 @@ public class StudentsActivity extends RecyclerView.Adapter<StudentsActivity.Stud
 
 
         studentViewHolder.imgRemove.setImageDrawable(mContext.getResources().getDrawable(R.drawable.delete));
+        studentViewHolder.imgEdit.setImageDrawable(mContext.getResources().getDrawable(R.drawable.edit));
         String gender = student.getGender();
         if (gender.equalsIgnoreCase("male")) {
             studentViewHolder.imgProfile.setImageResource(R.drawable.male);
@@ -66,9 +69,7 @@ public class StudentsActivity extends RecyclerView.Adapter<StudentsActivity.Stud
 
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(StudentsActivity.this, MainActivity.class);
-//                intent.putExtra("EXTRA_SESSION_ID", sessionId);
-//                startActivity(intent);
+                studentAdapterEvents.onEditClicked(position);
             }
         });
 
@@ -79,7 +80,6 @@ public class StudentsActivity extends RecyclerView.Adapter<StudentsActivity.Stud
     public int getItemCount() {
         return studentList.size();
     }
-
 
     public class StudentViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvAddress, tvAge, tvGender;
@@ -94,7 +94,12 @@ public class StudentsActivity extends RecyclerView.Adapter<StudentsActivity.Stud
             tvGender = itemView.findViewById(R.id.tvgender);
             imgProfile = itemView.findViewById(R.id.imgProfile);
             imgRemove = itemView.findViewById(R.id.imgremove);
+            imgEdit = itemView.findViewById(R.id.imgEdit);
 
         }
+    }
+
+    public interface StudentAdapterEvents {
+        void onEditClicked(int position);
     }
 }
