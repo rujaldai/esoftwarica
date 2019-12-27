@@ -62,17 +62,6 @@ public class StudentsActivity extends RecyclerView.Adapter<StudentsActivity.Stud
             }
         });
 
-        studentViewHolder.imgEdit.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-//                Intent intent = new Intent(StudentsActivity.this, MainActivity.class);
-//                intent.putExtra("EXTRA_SESSION_ID", sessionId);
-//                startActivity(intent);
-            }
-        });
-
-
     }
 
     @Override
